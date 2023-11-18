@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <link rel="stylesheet" href="styles.css"> 
+  <title>Wishlist App</title> 
+ <style type="text/css" id="dcoder_stylesheet">body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.wishlist-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#wishlist-items {
+  margin-bottom: 20px;
+}
+
+.wishlist-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+
+.wishlist-item img {
+  max-width: 100%;
+  max-height: 100px;
+}
+
+button {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}</style></head> 
+ <body> 
+  <div class="wishlist-container"> 
+   <h1>My Wishlist</h1> 
+   <div id="wishlist-items"></div> 
+   <div> 
+    <input type="text" id="item-title" placeholder="Title"> 
+    <input type="text" id="item-description" placeholder="Description"> 
+    <input type="text" id="item-image" placeholder="Image URL"> <button onclick="addItem()">Add to Wishlist</button> 
+   </div> 
+  </div> 
+  <script src="script.js"></script> 
+ 
+<script type="text/javascript" id="dcoder_script">let wishlistItems = [];
+
+// Fungsi untuk menyimpan daftar wishlist ke localStorage
+function saveToLocalStorage() {
+  localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
+}
+
+// Fungsi untuk memuat daftar wishlist dari localStorage
+function loadFromLocalStorage() {
+  const storedWishlistItems = localStorage.getItem('wishlistItems');
+  if (storedWishlistItems) {
+    wishlistItems = JSON.parse(storedWishlistItems);
+    renderWishlist();
+  }
+}
+
+// Panggil fungsi untuk memuat daftar wishlist saat halaman dimuat
+loadFromLocalStorage();
+
+function renderWishlist() {
+  const wishlistContainer = document.getElementById('wishlist-items');
+  wishlistContainer.innerHTML = '';
+
+  wishlistItems.forEach((item, index) => {
+    const itemContainer = document.createElement('div');
+    itemContainer.classList.add('wishlist-item');
+
+    const title = document.createElement('h3');
+    title.textContent = item.title;
+
+    const description = document.createElement('p');
+    description.textContent = item.description;
+
+    const image = document.createElement('img');
+    image.src = item.image;
+
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.onclick = () => editItem(index);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = () => deleteItem(index);
+
+    itemContainer.appendChild(title);
+    itemContainer.appendChild(description);
+    itemContainer.appendChild(image);
+    itemContainer.appendChild(editButton);
+    itemContainer.appendChild(deleteButton);
+
+    wishlistContainer.appendChild(itemContainer);
+  });
+}
+
+function addItem() {
+  const title = document.getElementById('item-title').value;
+  const description = document.getElementById('item-description').value;
+  const image = document.getElementById('item-image').value;
+
+  const newItem = { title, description, image };
+  wishlistItems.push(newItem);
+
+  renderWishlist();
+  saveToLocalStorage(); // Simpan ke localStorage setelah menambah wishlist
+}
+
+function editItem(index) {
+  const newTitle = prompt('Enter new title:');
+  const newDescription = prompt('Enter new description:');
+  const newImage = prompt('Enter new image URL:');
+
+  wishlistItems[index].title = newTitle;
+  wishlistItems[index].description = newDescription;
+  wishlistItems[index].image = newImage;
+
+  renderWishlist();
+  saveToLocalStorage(); // Simpan ke localStorage setelah mengedit wishlist
+}
+
+function deleteItem(index) {
+  wishlistItems.splice(index, 1);
+  renderWishlist();
+  saveToLocalStorage(); // Simpan ke localStorage setelah menghapus wishlist
+}
+
+renderWishlist();
+</script></body></html>
